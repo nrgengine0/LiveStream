@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Style Stream Overlay - Animated</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: transparent; 
+            display: flex;
+            align-items: flex-end; 
+            justify-content: center; 
+            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Box တစ်ခုလုံး ငြိမ့်ငြိမ့်လေး အထက်အောက်လှုပ်နေမည့် Animation */
+        .overlay-wrapper {
+            margin-bottom: 50px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            animation: floatBox 6s ease-in-out infinite; 
+        }
+
+        @keyframes floatBox {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); } /* အပေါ်ကို အနည်းငယ်တက်မည် */
+            100% { transform: translateY(0px); }
+        }
+
+        /* iOS Glassmorphism */
+        .overlay-container {
+            background: rgba(30, 30, 30, 0.65); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.15); 
+            border-radius: 24px; 
+            padding: 16px 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            text-align: center;
+        }
+
+        /* စာသား Animation တွင် Blur ပါ ထည့်သွင်းခြင်း */
+        .text-content {
+            color: #F5F5F7; 
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 1.5;
+            letter-spacing: 0.5px;
+            
+            /* Animation အတက်အဆင်း၊ အမှေးအမှိန်နှင့် အဝါး (Blur) Effect */
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); 
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0px);
+        }
+
+        /* စာပြောင်းချိန်တွင် ဖျောက်ထားမည့် အနေအထား */
+        .text-hidden {
+            opacity: 0;
+            transform: translateY(15px) scale(0.95); /* အောက်ကိုဆင်းပြီး နည်းနည်းသေးသွားမည် */
+            filter: blur(5px); /* iOS ပုံစံ ဝါးသွားမည် */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay-wrapper">
+        <div class="overlay-container">
+            <div id="stream-text" class="text-content">
+                YouTube: @VorSoloYT
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const messages = [
+            "YouTube: @VorSoloYT",
+            "Uc/Dia ဝယ်လို့လိုပါက Tg: @vorsolo_shop",
+            "YouTube channel ကို subscribe မလုပ်ရသေးရင် subscribe လုပ်ပေးသွားပါအုံးခင်ဗျ",
+            "Like မလုပ်ရသေးရင် like လေးတွေလုပ်ပေးသွားပါအုံးဗျ"
+        ];
+
+        let currentIndex = 0;
+        const textElement = document.getElementById('stream-text');
+
+        function changeText() {
+            // အရင်ဆုံး စာကို အောက်ချ၊ ဝါးပြီး မှေးမှိန်လိုက်မယ်
+            textElement.classList.add('text-hidden');
+
+            setTimeout(() => {
+                // နောက်စာသားတစ်ခုကို ပြောင်းမယ်
+                currentIndex = (currentIndex + 1) % messages.length;
+                textElement.innerText = messages[currentIndex];
+
+                // ပြန်ပေါ်လာမယ် (ဝါးနေရာကနေ ညင်သာစွာ ပြန်ကြည်လာမည်)
+                textElement.classList.remove('text-hidden');
+            }, 600); // 0.6 စက္ကန့်အကြာမှ စာပြောင်းမည် (Animation အချိန်နှင့် ညှိထားသည်)
+        }
+
+        // ၇ စက္ကန့် (7000 milliseconds) တစ်ခါ စာပြောင်းမည်
+        setInterval(changeText, 7000);
+    </script>
+
+</body>
+</html>
