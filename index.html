@@ -3,14 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vorsolo</title>
+    <title>Vorsolo Premium Stream Overlay</title>
+    <!-- Icons အတွက် FontAwesome ချိတ်ဆက်ခြင်း -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        :root {
+            --glow-cyan: #00ffcc;
+            --glow-red: #ff4757;
+            --glow-blue: #1e90ff;
+        }
+
         body {
             margin: 0;
             padding: 0;
             background-color: transparent; 
-            /* Test အတွက် အောက်က line ကိုဖွင့်ပါ */
-            /* background-color: #1a1a24; */
+            /* Test လုပ်ရန် အောက်က line ကိုဖွင့်ပါ */
+            /* background-color: #13131a; */
             display: flex;
             align-items: flex-end; 
             justify-content: flex-start; 
@@ -26,38 +35,37 @@
             display: flex;
             align-items: center;
             animation: floatBox 6s ease-in-out infinite; 
+            /* Box တစ်ခုလုံးအတွက် အရိပ် */
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5));
         }
 
         @keyframes floatBox {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
         }
 
         /* ရှင်းလင်းပြီး Premium ဆန်သော Box Design */
         .overlay-container {
             position: relative;
-            background: rgba(20, 20, 25, 0.65); 
-            backdrop-filter: blur(25px); 
-            -webkit-backdrop-filter: blur(25px);
+            background: linear-gradient(135deg, rgba(20, 20, 25, 0.8), rgba(10, 10, 15, 0.5)); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px);
             
-            /* ငွေရောင် ဘောင်အပါးလေး */
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-top: 1px solid rgba(255, 255, 255, 0.3); /* အပေါ်ဘက်ကို ပိုလင်းထားသည် */
+            /* ငွေရောင် ဘောင်အပါးလေးကို ပိုပြီးသေသပ်အောင်လုပ်ထားသည် */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.35); 
+            border-left: 1px solid rgba(255, 255, 255, 0.2); 
             
-            padding: 18px 45px 18px 30px;
-            border-radius: 20px; 
+            padding: 16px 45px 16px 26px;
+            border-radius: 18px; 
             display: flex;
             align-items: center;
-            gap: 18px; 
+            gap: 20px; 
             overflow: hidden;
             
-            /* နူးညံ့စွာ လင်းလိုက်မှိန်လိုက်ဖြစ်မယ့် အရိပ် */
-            animation: breatheGlow 4s ease-in-out infinite alternate;
-        }
-
-        @keyframes breatheGlow {
-            0% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.05); }
-            100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 255, 255, 0.15); }
+            /* စာသားအပြောင်းအလဲမှာ Box အတိုအရှည် ခုန်မသွားစေရန် */
+            min-width: 380px; 
+            min-height: 40px;
         }
 
         /* မှန်သားပြင်ပေါ် အလင်းဖြတ်ပြေးသည့် Shine Effect */
@@ -75,55 +83,73 @@
                 rgba(255, 255, 255, 0) 100%
             );
             transform: skewX(-25deg);
-            animation: glassShine 7s infinite;
+            animation: glassShine 8s infinite;
         }
 
         @keyframes glassShine {
-            0% { left: -150%; }
-            15% { left: 200%; }
-            100% { left: 200%; } /* ကျန်တဲ့အချိန်ကို ခေတ္တရပ်ထားရန် */
+            0%, 20% { left: -150%; }
+            35%, 100% { left: 200%; } /* ကျန်တဲ့အချိန်ကို ခေတ္တရပ်ထားရန် */
         }
 
-        /* Live Indicator (Pulse Dot) */
+        /* Live Indicator (Pulse Dot) ကို Wave Effect ထည့်ထားသည် */
         .pulse-dot {
-            width: 12px;
-            height: 12px;
-            background-color: #00ffcc;
+            width: 14px;
+            height: 14px;
+            background-color: var(--glow-cyan);
             border-radius: 50%;
-            box-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
-            animation: pulseAnim 2s infinite;
+            box-shadow: 0 0 10px var(--glow-cyan), 0 0 20px var(--glow-cyan);
             flex-shrink: 0;
+            position: relative;
         }
 
-        @keyframes pulseAnim {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 204, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 255, 204, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 204, 0); }
+        /* အပြင်ဘက်ကို ဖြာထွက်သွားမည့် အလင်းလှိုင်း */
+        .pulse-dot::after {
+            content: '';
+            position: absolute;
+            top: -4px; left: -4px; right: -4px; bottom: -4px;
+            border-radius: 50%;
+            border: 2px solid var(--glow-cyan);
+            animation: pingWave 2s cubic-bezier(0, 0, 0.2, 1) infinite;
         }
 
-        /* စာသား Effect */
+        @keyframes pingWave {
+            0% { transform: scale(0.8); opacity: 1; }
+            75%, 100% { transform: scale(2.2); opacity: 0; }
+        }
+
+        /* စာသား Effect (ပိုမို ချောမွေ့အောင် ပြင်ထားသည်) */
+        .text-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
         .text-content {
             color: #F5F5F7; 
-            font-size: 23px;
-            font-weight: 500;
+            font-size: 21px;
+            font-weight: 600;
             line-height: 1.5;
             letter-spacing: 0.5px;
-            transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            /* Bouncy ဖြစ်တဲ့ Transition */
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
             opacity: 1;
-            transform: translateY(0) scale(1) rotateX(0deg);
+            transform: translateY(0) scale(1);
             filter: blur(0px);
-            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            text-shadow: 0 2px 5px rgba(0,0,0,0.6);
         }
 
-.text-hidden {
+        .text-hidden {
             opacity: 0;
-            transform: translateY(20px) scale(0.9) rotateX(-20deg);
-            filter: blur(8px);
+            transform: translateY(15px) scale(0.95);
+            filter: blur(4px);
         }
 
-        .hl-red { color: #ff4757; font-weight: bold; }
-        .hl-blue { color: #1e90ff; font-weight: bold; }
-        .hl-green { color: #00ffcc; font-weight: bold; }
+        /* Highlight အရောင်များနှင့် Neon အလင်းများ */
+        .hl-red { color: var(--glow-red); text-shadow: 0 0 12px rgba(255, 71, 87, 0.6); }
+        .hl-blue { color: var(--glow-blue); text-shadow: 0 0 12px rgba(30, 144, 255, 0.6); }
+        .hl-green { color: var(--glow-cyan); text-shadow: 0 0 12px rgba(0, 255, 204, 0.6); }
+
+        /* Icon spacing */
+        .icon-sp { margin-right: 8px; font-size: 24px; vertical-align: middle; }
 
     </style>
 </head>
@@ -132,36 +158,44 @@
     <div class="overlay-wrapper">
         <div class="overlay-container">
             <div class="pulse-dot"></div>
-            <div id="stream-text" class="text-content">
-                <span class="hl-red">YouTube:</span> @VorSoloYT
+            <div class="text-wrapper">
+                <div id="stream-text" class="text-content">
+                    <!-- စတင်ပြသမည့် စာသား -->
+                    <i class="fa-brands fa-youtube hl-red icon-sp"></i> <span class="hl-red">YouTube:</span> @VorSoloYT
+                </div>
             </div>
         </div>
     </div>
 
-
     <script>
+        // Icon လေးတွေပါ ထည့်သွင်းပေးထားပါတယ်
         const messages = [
-            "<span class='hl-red'>YouTube:</span> @VorSoloYT",
-            "<span class='hl-blue'>Telegram:</span> @vorsolo_shop",
-            "Uc/Dia များဝယ်လိုပါက <span class='hl-blue'> Telegram:</span> @VorSolo001",
-            "ML အကောင့် အရောင်း/အဝယ်<span class='hl-blue'> Telegram:</span> @HenryJohn01",
-            "<span class='hl-red'>YouTube</span> channel ကို subscribe မလုပ်ရသေးရင်<br>subscribe လုပ်ပေးသွားပါအုံးခင်ဗျ",
-            "Like မလုပ်ရသေးရင် like လေးတွေလုပ်ပေးသွားပါအုံးဗျ"
+            "<i class='fa-brands fa-youtube hl-red icon-sp'></i> <span class='hl-red'>YouTube:</span> @VorSoloYT",
+            "<i class='fa-brands fa-telegram hl-blue icon-sp'></i> <span class='hl-blue'>Telegram:</span> @vorsolo_shop",
+            "<i class='fa-solid fa-gem hl-blue icon-sp'></i> Uc/Dia များဝယ်လိုပါက <span class='hl-blue'> Telegram:</span> @VorSolo001",
+            "<i class='fa-solid fa-gamepad hl-blue icon-sp'></i> ML အကောင့် အရောင်း/အဝယ် <span class='hl-blue'> Telegram:</span> @HenryJohn01",
+            "<i class='fa-brands fa-youtube hl-red icon-sp'></i> <span class='hl-red'>YouTube</span> channel ကို Subscribe လုပ်ပေးသွားပါအုံးခင်ဗျ",
+            "<i class='fa-solid fa-thumbs-up hl-green icon-sp'></i> Like မလုပ်ရသေးရင် Like လေးတွေလုပ်ပေးသွားပါအုံးဗျ"
         ];
 
         let currentIndex = 0;
         const textElement = document.getElementById('stream-text');
 
         function changeText() {
+            // စာသားကို ဖျောက်မယ်
             textElement.classList.add('text-hidden');
 
             setTimeout(() => {
+                // နောက်စာသားပြောင်းမယ်
                 currentIndex = (currentIndex + 1) % messages.length;
                 textElement.innerHTML = messages[currentIndex]; 
+                
+                // စာသားကို ပြန်ဖော်မယ်
                 textElement.classList.remove('text-hidden');
             }, 600); 
         }
 
+        // စက္ကန့် ၇ စက္ကန့်တိုင်း ပြောင်းမယ်
         setInterval(changeText, 7000);
     </script>
 
