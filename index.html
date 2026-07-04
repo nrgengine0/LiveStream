@@ -3,23 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>vorsolo</title>
+    <title>Vorsolo Minimal Stream Overlay</title>
     <style>
         body {
             margin: 0;
             padding: 0;
             background-color: transparent; 
+            /* Test အတွက် အောက်က line ကိုဖွင့်ပါ */
+            /* background-color: #1a1a24; */
             display: flex;
             align-items: flex-end; 
-            justify-content: flex-start; /* အလယ်ကနေ ဘယ်ဘက်ထောင့်ကို ရွှေ့လိုက်သည် */
+            justify-content: flex-start; 
             height: 100vh;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, 'Pyidaungsu', 'Noto Sans Myanmar', sans-serif;
             overflow: hidden;
         }
 
         .overlay-wrapper {
-            margin-left: 40px; /* ဘယ်ဘက်အစွန်းမှ အနည်းငယ်ခွာထားရန် */
-            margin-bottom: 50px;
+            margin-left: 45px; 
+            margin-bottom: 55px;
             position: relative;
             display: flex;
             align-items: center;
@@ -27,58 +29,122 @@
         }
 
         @keyframes floatBox {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-12px); }
-            100% { transform: translateY(0px); }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
         }
 
+        /* ရှင်းလင်းပြီး Premium ဆန်သော Box Design */
         .overlay-container {
-            background: rgba(30, 30, 30, 0.65); 
-            backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px); 
-            border: 1px solid rgba(255, 255, 255, 0.15); 
-            border-radius: 24px; 
-            padding: 16px 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            max-width: 800px;
-            text-align: left; /* စာသားကို ဘယ်ဘက်ညှိထားသည် */
+            position: relative;
+            background: rgba(20, 20, 25, 0.65); 
+            backdrop-filter: blur(25px); 
+            -webkit-backdrop-filter: blur(25px);
+            
+            /* ငွေရောင် ဘောင်အပါးလေး */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-top: 1px solid rgba(255, 255, 255, 0.3); /* အပေါ်ဘက်ကို ပိုလင်းထားသည် */
+            
+            padding: 18px 45px 18px 30px;
+            border-radius: 20px; 
+            display: flex;
+            align-items: center;
+            gap: 18px; 
+            overflow: hidden;
+            
+            /* နူးညံ့စွာ လင်းလိုက်မှိန်လိုက်ဖြစ်မယ့် အရိပ် */
+            animation: breatheGlow 4s ease-in-out infinite alternate;
         }
 
+        @keyframes breatheGlow {
+            0% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.05); }
+            100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 255, 255, 0.15); }
+        }
+
+        /* မှန်သားပြင်ပေါ် အလင်းဖြတ်ပြေးသည့် Shine Effect */
+        .overlay-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                to right, 
+                rgba(255, 255, 255, 0) 0%, 
+                rgba(255, 255, 255, 0.15) 50%, 
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg);
+            animation: glassShine 7s infinite;
+        }
+
+        @keyframes glassShine {
+            0% { left: -150%; }
+            15% { left: 200%; }
+            100% { left: 200%; } /* ကျန်တဲ့အချိန်ကို ခေတ္တရပ်ထားရန် */
+        }
+
+        /* Live Indicator (Pulse Dot) */
+        .pulse-dot {
+            width: 12px;
+            height: 12px;
+            background-color: #00ffcc;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+            animation: pulseAnim 2s infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulseAnim {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 204, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 255, 204, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 204, 0); }
+        }
+
+        /* စာသား Effect */
         .text-content {
             color: #F5F5F7; 
-            font-size: 24px;
+            font-size: 23px;
             font-weight: 500;
             line-height: 1.5;
             letter-spacing: 0.5px;
-            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); 
+            transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1); 
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translateY(0) scale(1) rotateX(0deg);
             filter: blur(0px);
+            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
 
-        .text-hidden {
+.text-hidden {
             opacity: 0;
-            transform: translateY(15px) scale(0.95);
-            filter: blur(5px);
+            transform: translateY(20px) scale(0.9) rotateX(-20deg);
+            filter: blur(8px);
         }
+
+        .hl-red { color: #ff4757; font-weight: bold; }
+        .hl-blue { color: #1e90ff; font-weight: bold; }
+        .hl-green { color: #00ffcc; font-weight: bold; }
+
     </style>
 </head>
 <body>
 
     <div class="overlay-wrapper">
         <div class="overlay-container">
+            <div class="pulse-dot"></div>
             <div id="stream-text" class="text-content">
-                YouTube: @VorSoloYT
+                <span class="hl-red">YouTube:</span> @VorSoloYT
             </div>
         </div>
     </div>
 
     <script>
         const messages = [
-            "YouTube: @VorSoloYT",
-            "Telegram: @vorsolo_shop",
-            "Uc/Dia များဝယ်လိုပါက Tg: @VorSolo001",
-            "YouTube channel ကို subscribe မလုပ်ရသေးရင် \nsubscribe လုပ်ပေးသွားပါအုံးခင်ဗျ",
+            "<span class='hl-red'>YouTube:</span> @VorSoloYT",
+            "<span class='hl-blue'>Telegram:</span> @vorsolo_shop",
+            "Uc/Dia များဝယ်လိုပါက <span class='hl-blue'> Telegram:</span> @VorSolo001",
+            "ML အကောင့် အရောင်း/အဝယ်<span class='hl-blue'> Telegram:</span> @HenryJohn01",
+            "<span class='hl-red'>YouTube</span> channel ကို subscribe မလုပ်ရသေးရင်<br>subscribe လုပ်ပေးသွားပါအုံးခင်ဗျ",
             "Like မလုပ်ရသေးရင် like လေးတွေလုပ်ပေးသွားပါအုံးဗျ"
         ];
 
@@ -90,9 +156,9 @@
 
             setTimeout(() => {
                 currentIndex = (currentIndex + 1) % messages.length;
-                textElement.innerText = messages[currentIndex];
+                textElement.innerHTML = messages[currentIndex]; 
                 textElement.classList.remove('text-hidden');
-            }, 600);
+            }, 600); 
         }
 
         setInterval(changeText, 7000);
